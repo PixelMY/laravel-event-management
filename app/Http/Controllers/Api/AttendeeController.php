@@ -22,6 +22,7 @@ class AttendeeController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('auth:sanctum', except: ['index', 'show', 'update']),
+            new Middleware('throttle:60,1', only: ['store', 'destroy']),
         ];
     }
 
@@ -46,7 +47,7 @@ class AttendeeController extends Controller implements HasMiddleware
 
         $attendee = $this->loadRelationships(
             $event->attendees()->create([
-                'user_id' => 1,
+                'user_id' => $request->user->id,
             ])
         );
 
